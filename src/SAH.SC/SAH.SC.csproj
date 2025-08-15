@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<PackageReference Include="SC.Newtonsoft.JSON" Version="1.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\SAH.SC.Abstraction\SAH.SC.Abstraction.csproj" />
+		<ProjectReference Include="..\SAH\SAH.csproj" />
+	</ItemGroup>
+
+</Project>

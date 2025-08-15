@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<PackageReference Include="SC.Abstraction" Version="1.0.0" />
+	</ItemGroup>
+
+</Project>

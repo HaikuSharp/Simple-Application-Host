@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAH.Reflection", "SAH.Refle
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAH.SEB", "SAH.SEB\SAH.SEB.csproj", "{77F9ADB3-332F-4C07-91A0-D6E077197E0E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAH.SC", "SAH.SC\SAH.SC.csproj", "{3E3FA598-2891-4C1A-B685-21D50569CC15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAH.SC.Abstraction", "SAH.SC.Abstraction\SAH.SC.Abstraction.csproj", "{BF9ABB63-3151-42DA-9FD1-E9E3E73B70F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{77F9ADB3-332F-4C07-91A0-D6E077197E0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77F9ADB3-332F-4C07-91A0-D6E077197E0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77F9ADB3-332F-4C07-91A0-D6E077197E0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E3FA598-2891-4C1A-B685-21D50569CC15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E3FA598-2891-4C1A-B685-21D50569CC15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E3FA598-2891-4C1A-B685-21D50569CC15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E3FA598-2891-4C1A-B685-21D50569CC15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF9ABB63-3151-42DA-9FD1-E9E3E73B70F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF9ABB63-3151-42DA-9FD1-E9E3E73B70F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF9ABB63-3151-42DA-9FD1-E9E3E73B70F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF9ABB63-3151-42DA-9FD1-E9E3E73B70F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

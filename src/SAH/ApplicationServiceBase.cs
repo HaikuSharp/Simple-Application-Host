@@ -6,5 +6,5 @@ public abstract class ApplicationServiceBase : InitializableBase, IApplicationSe
 {
     public virtual string Name => GetType().Name;
 
-    public virtual int Order => 0;
+    public virtual int Order => (int)EServiceOrder.Default;
 }
