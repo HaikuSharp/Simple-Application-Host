@@ -8,20 +8,30 @@ using System.Threading.Tasks;
 
 namespace SAH.SC;
 
+/// <summary>
+/// Service for managing application configurations.
+/// </summary>
 public sealed class ConfigurationService(IConfigurationFileResolver resolver, IConfigurationSettings settings) : ApplicationServiceBase, IConfigurationService
 {
     private const string CONFUIGURATIONS_PATH = "Configurations";
     private const string ROOT_CONFIGURATION_NAME = "Root";
 
+    /// <inheritdoc/>
     public event ConfigurationRootSaveHandler OnRootSaved;
+
+    /// <inheritdoc/>
     public event ConfigurationRootLoadHandler OnRootLoaded;
 
+    /// <inheritdoc/>
     public IConfigurationRoot Root { get; private set; }
 
+    /// <inheritdoc/>
     public bool IsLoaded { get; private set; }
 
+    /// <inheritdoc/>
     public override int Order => (int)EServiceOrder.RootService;
 
+    /// <inheritdoc/>
     protected override void OnInitialized()
     {
         ConfigurationBuilder builder = new();
@@ -39,6 +49,7 @@ public sealed class ConfigurationService(IConfigurationFileResolver resolver, IC
         Task.Run(LoadConfigurationAsync).Forget();
     }
 
+    /// <inheritdoc/>
     protected override void OnDeinitialize() => Task.Run(SaveConfigurationAsync).Forget();
 
     private async Task SaveConfigurationAsync()
