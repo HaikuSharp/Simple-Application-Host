@@ -1,7 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
-		<PackageReference Include="SC.Abstraction" Version="1.0.0" />
+		<PackageReference Include="SC.Abstraction" Version="1.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\SAH.Abstraction\SAH.Abstraction.csproj" />
 	</ItemGroup>
 
 </Project>
