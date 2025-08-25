@@ -16,39 +16,41 @@ public sealed class ApplicationHost<TCotroller> : InitializableBase, IApplicatio
     /// <summary>
     /// Gets the service controller.
     /// </summary>
-    public TCotroller Controller { get; } = ServiceControllerBase.Create<TCotroller>();
-
-    /// <inheritdoc/>
-    public IServiceProvider RootScope { get; private set; }
+    public TCotroller Controller { get; private set; }
 
     /// <inheritdoc/>
     IServiceController IApplicationHost.Controller => Controller;
 
     /// <inheritdoc/>
-    protected override void OnInitialized() => RootScope = Controller.CreateScope(ScopeId.Default);
+    protected override void OnInitialized() => Controller = ServiceControllerBase.Create<TCotroller>();
 
     /// <inheritdoc/>
-    protected override void OnDeinitialize() => RootScope?.Dispose();
+    protected override void OnDeinitialize()
+    {
+        if(Controller is null) return;
+        Controller.Dispose();
+        Controller = null;
+    }
 
     /// <inheritdoc/>
     public void Load(IServiceSource source)
     {
-        var scope = RootScope;
+        var controller = Controller;
         var descriptors = source.Resolve();
 
         foreach(var serviceDescriptor in descriptors) Controller.RegisterService(serviceDescriptor);
-        if(scope is not null) foreach(var service in GetServices(scope, descriptors)) service.IntitializeIfNeeded();
+        if(controller is not null) foreach(var service in GetServices(controller, descriptors)) service.IntitializeIfNeeded();
     }
 
     /// <inheritdoc/>
     public void Unload(IServiceSource source)
     {
-        var scope = RootScope;
+        var controller = Controller;
         var descriptors = source.Resolve();
 
-        if(scope is not null) foreach(var service in GetServices(scope, descriptors)) service.DeintitializeIfNeeded();
+        if(controller is not null) foreach(var service in GetServices(controller, descriptors)) service.DeintitializeIfNeeded();
         foreach(var serviceDescriptor in descriptors) Controller.UnregisterService(ServiceId.FromDescriptor(serviceDescriptor));
     }
 
-    private static IEnumerable<IApplicationService> GetServices(IServiceProvider scope, IEnumerable<IServiceDescriptor> descriptors) => descriptors.Select(d => scope.GetService(ServiceId.FromDescriptor(d))).OfType<IApplicationService>().OrderBy(s => s.Order);
+    private static IEnumerable<IApplicationService> GetServices(TCotroller controller, IEnumerable<IServiceDescriptor> descriptors) => descriptors.Select(d => controller.GetService(ServiceId.FromDescriptor(d))).OfType<IApplicationService>().OrderBy(s => s.Order);
 }

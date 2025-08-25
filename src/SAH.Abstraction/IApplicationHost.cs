@@ -14,11 +14,6 @@ public interface IApplicationHost : IInitializable
     IServiceController Controller { get; }
 
     /// <summary>
-    /// Gets the root service scope.
-    /// </summary>
-    IServiceProvider RootScope { get; }
-
-    /// <summary>
     /// Loads services from the specified source.
     /// </summary>
     /// <param name="source">The service source.</param>
