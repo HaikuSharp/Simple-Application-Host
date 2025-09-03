@@ -2,8 +2,6 @@
 using SC;
 using SC.Abstraction;
 using SC.Extensions;
-using Sugar.Object.Extensions;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -17,82 +15,65 @@ public sealed class ConfigurationService(IConfigurationFileResolver resolver, IC
     private const string CONFUIGURATIONS_PATH = "Configurations";
     private const string ROOT_CONFIGURATION_NAME = "Root";
 
+    private CompositeConfigurationValueSource<IFileConfigurationValueSource> m_ValuesSource;
+
     /// <inheritdoc/>
-    public IConfigurationRoot Root { get; private set; }
+    public IConfiguration Root { get; private set; }
 
     /// <inheritdoc/>
     public override int Order => (int)EServiceOrder.RootService;
 
     /// <inheritdoc/>
-    public IEnumerable<IConfigurationOption> LoadedOptions => Root.LoadedOptions;
-
-    /// <inheritdoc/>
-    public IConfigurationSettings Settings => Root.Settings;
-
-    IEnumerable<IReadOnlyConfigurationOption> IReadOnlyConfiguration.LoadedOptions => LoadedOptions;
-
-    /// <inheritdoc/>
-    public IEnumerable<IConfiguration> LoadedConfigurations => Root.LoadedConfigurations;
-
-    /// <inheritdoc/>
     protected override void OnInitialized()
     {
-        ConfigurationBuilder builder = new();
 
         if(!Directory.Exists(CONFUIGURATIONS_PATH))
         {
-            Directory.CreateDirectory(CONFUIGURATIONS_PATH).Forget();
+            _ = Directory.CreateDirectory(CONFUIGURATIONS_PATH);
             return;
         }
 
-        foreach(string filePath in Directory.GetFiles(CONFUIGURATIONS_PATH)) builder.Append(resolver.Resolve(filePath)).Forget();
+        var source = m_ValuesSource = new();
 
-        Root = builder.Build(ROOT_CONFIGURATION_NAME, settings);
+        foreach(string filePath in Directory.GetFiles(CONFUIGURATIONS_PATH)) source.AppendSource(resolver.Resolve(filePath, settings));
 
-        Task.Run(this.LoadAsync).Forget();
+        Root = new Configuration(ROOT_CONFIGURATION_NAME, settings);
+
+        _ = Task.Run(LoadAsync);
     }
 
     /// <inheritdoc/>
-    protected override void OnDeinitialize() => Task.Run(this.SaveAsync).Forget();
+    protected override void OnDeinitialize() => _ = Task.Run(SaveAsync);
 
     /// <inheritdoc/>
-    public bool HasOption(string path) => Root.HasOption(path);
+    public void Load()
+    {
+        var source = m_ValuesSource;
+        source.Load();
+        Root.Load(source);
+    }
 
     /// <inheritdoc/>
-    public IEnumerable<string> GetOptionsNames(string path) => Root.GetOptionsNames(path);
+    public void Save()
+    {
+        var source = m_ValuesSource;
+        Root.Save(source);
+        source.Save();
+    }
 
     /// <inheritdoc/>
-    public IConfigurationOption<T> GetOption<T>(string path) => Root.GetOption<T>(path);
+    public async Task LoadAsync()
+    {
+        var source = m_ValuesSource;
+        await source.LoadAsync();
+        Root.Load(source);
+    }
 
     /// <inheritdoc/>
-    public IConfigurationOption<T> AddOption<T>(string path, T value) => Root.AddOption(path, value);
-
-    /// <inheritdoc/>
-    public void RemoveOption(string path) => Root.RemoveOption(path);
-
-    /// <inheritdoc/>
-    public bool HasConfiguration(string name) => Root.HasConfiguration(name);
-
-    /// <inheritdoc/>
-    public IConfiguration GetConfiguration(string name) => Root.GetConfiguration(name);
-
-    /// <inheritdoc/>
-    public void AddConfiguration(IConfiguration configuration) => Root.AddConfiguration(configuration);
-
-    /// <inheritdoc/>
-    public void RemoveConfiguration(string name) => Root.RemoveConfiguration(name);
-
-    /// <inheritdoc/>
-    public void Save(string path) => Root.Save(path);
-
-    /// <inheritdoc/>
-    public void Load(string path) => Root.Load(path);
-
-    /// <inheritdoc/>
-    public async Task SaveAsync(string path) => await Root.SaveAsync(path);
-
-    /// <inheritdoc/>
-    public async Task LoadAsync(string path) => await Root.LoadAsync(path);
-
-    IReadOnlyConfigurationOption<T> IReadOnlyConfiguration.GetOption<T>(string path) => GetOption<T>(path);
+    public Task SaveAsync()
+    {
+        var source = m_ValuesSource;
+        Root.Save(source);
+        return source.SaveAsync();
+    }
 }

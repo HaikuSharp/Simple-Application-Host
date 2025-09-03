@@ -15,5 +15,5 @@ public class JsonConfigurationFileResolver : IConfigurationFileResolver
     public static JsonConfigurationFileResolver Default => field ??= new();
 
     /// <inheritdoc/>
-    public IConfigurationSource Resolve(string path) => new JsonFileConfigurationSource(path);
+    public IFileConfigurationValueSource Resolve(string path, IConfigurationSettings settings) => new JsonFileConfigurationValueSource(path, settings);
 }

@@ -8,9 +8,10 @@ namespace SAH.SC.Abstraction;
 public interface IConfigurationFileResolver
 {
     /// <summary>
-    /// Resolves a configuration source from the specified file path.
+    /// Resolves a configuration values source from the specified file path.
     /// </summary>
     /// <param name="path">The path to the configuration file.</param>
+    /// <param name="settings">The configuration settings.</param>
     /// <returns>The resolved configuration source.</returns>
-    IConfigurationSource Resolve(string path);
+    IFileConfigurationValueSource Resolve(string path, IConfigurationSettings settings);
 }
